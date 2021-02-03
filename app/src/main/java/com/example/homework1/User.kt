@@ -2,7 +2,7 @@ package com.example.homework1
 
 class User{
 
-    //var id : Int = 0
+    var id : Int = 0
     var userName : String = ""
     var passWord : String = ""
 

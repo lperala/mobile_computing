@@ -26,6 +26,7 @@ class SignActivity : AppCompatActivity() {
                     && binding.txtPassword.text.toString() == binding.txtPasswordConfirm.text.toString()) {
                 var user = User(binding.txtUserName.text.toString(), binding.txtPassword.text.toString())
                 var db = DataBaseHandler(context)
+                println("TÄÄLLÄ")
                 db.insertData(user)
 
             }

@@ -8,13 +8,13 @@ import android.widget.Toast
 
 val DATABASE_NAME = "HW1DB"
 val TABLE_NAME = "users"
-//val COL_ID = "id"
+val COL_ID = "id"
 val COL_USERNAME = "username"
 val COL_PASSWORD = "password"
 
 class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTable = "CREATE TABLE $TABLE_NAME ($COL_USERNAME$COL_PASSWORD )"
+        val createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_USERNAME + " VARCHAR(256)," + COL_PASSWORD + " INTEGER)";
 
         db?.execSQL(createTable)
     }
@@ -27,7 +27,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
     fun insertData(user : User){
         val db = this.writableDatabase
         var cv = ContentValues()
-        //cv.put(COL_ID, user.id)
+        cv.put(COL_ID, user.id)
         cv.put(COL_USERNAME, user.userName)
         cv.put(COL_PASSWORD, user.passWord)
         var result = db.insert(TABLE_NAME, null, cv)

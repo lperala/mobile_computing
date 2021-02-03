@@ -99,7 +99,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--Testing purposes only
+
     <Button
         android:id="@+id/btnRead"
         android:layout_width="wrap_content"
@@ -124,5 +124,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.817" />
-    -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>
