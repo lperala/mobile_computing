@@ -12,6 +12,7 @@ val COL_ID = "id"
 val COL_USERNAME = "username"
 val COL_PASSWORD = "password"
 
+//Test
 class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_USERNAME + " VARCHAR(256)," + COL_PASSWORD + " INTEGER)";
