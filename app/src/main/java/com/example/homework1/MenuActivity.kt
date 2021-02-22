@@ -31,11 +31,12 @@ class MenuActivity : AppCompatActivity() {
         val messages = db.getDataMessages()
         val arrayAdapter = MessageArrayAdapter(this, messages)
 
-        Toast.makeText(this@MenuActivity, "$messages", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this@MenuActivity, "$messages", Toast.LENGTH_SHORT).show()
         binding.listView.adapter = arrayAdapter
 
-        binding.txtLogged.text = loggedAs
+        binding.txtLogged.text = "Logged in as: " + loggedAs
         // Shows the user's profile
+
         binding.btnProfile.setOnClickListener {
             Log.d("Lab", "ProfileActivity Button CLicked")
             startActivity(
@@ -67,7 +68,7 @@ class MenuActivity : AppCompatActivity() {
         binding.listView.setOnItemClickListener(object: AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 globalPos = position
-                Toast.makeText(context, "GLOBALPOS: " + globalPos, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "GLOBALPOS: " + globalPos, Toast.LENGTH_SHORT).show()
                 startActivity(
                         Intent(applicationContext, MessageEditDeleteActivity::class.java)
                 )
@@ -92,8 +93,9 @@ class MessageArrayAdapter(context: Context, messages: List<ListMessages>)
         val currentMessage = getItem(position)
 
         if (currentMessage != null) {
-            //rootView.messageImage.setImageResource(currentMessage.imageResource)
+            rootView.messageImage.setImageResource(currentMessage.imageResource)
             rootView.messageContent.text = currentMessage.message
+            rootView.messageDate.text = currentMessage.date
         }
 
 

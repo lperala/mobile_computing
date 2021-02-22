@@ -16,6 +16,7 @@ val COL_PASSWORD = "password"
 
 val TABLE_NAME_MESSAGE = "messages"
 val COL_ID_MESSAGE = "id_message"
+val COL_ID_MESSAGE_MANUAL = "id_message_manual"
 val COL_MESSAGE = "message"
 val COL_LOCATION_X = "location_x"
 val COL_LOCATION_Y = "location_y"
@@ -23,6 +24,7 @@ val COL_REMINDER_TIME = "reminder_time"
 val COL_CREATION_TIME = "creation_time"
 val COL_CREATOR_ID = "creator_id"
 val COL_REMINDER_SEEN = "reminder_seen"
+val COL_MESSAGE_IMAGE = "message_image"
 
 public var loggedAs = ""
 
@@ -33,7 +35,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_USERNAME + " VARCHAR(256)," + COL_PASSWORD + " INTEGER)";
         val createTableMessage = "CREATE TABLE " + TABLE_NAME_MESSAGE + " (" + COL_ID_MESSAGE + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_MESSAGE + " VARCHAR(256)," + COL_LOCATION_X + " VARCHAR(256)," +
-                COL_LOCATION_Y + " VARCHAR(256)," + COL_REMINDER_TIME +  " VARCHAR(256)," + COL_CREATION_TIME + " VARCHAR(256)," + COL_CREATOR_ID + " VARCHAR(256)," + COL_REMINDER_SEEN + " INTEGER)";
+                COL_LOCATION_Y + " VARCHAR(256)," + COL_REMINDER_TIME +  " VARCHAR(256)," + COL_CREATION_TIME + " VARCHAR(256)," + COL_CREATOR_ID + " VARCHAR(256)," + COL_REMINDER_SEEN + " INTEGER, " + COL_MESSAGE_IMAGE + " INTEGER)";
 
         db?.execSQL(createTable)
         db?.execSQL(createTableMessage)
@@ -66,7 +68,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val data = db.readDataMessages()
         var cvMessages = ContentValues()
 
-        //cvMessages.put(COL_ID_MESSAGE, final_id)
+        //cvMessages.put(COL_ID_MESSAGE, messages.id_message)
         cvMessages.put(COL_MESSAGE, messages.message)
         cvMessages.put(COL_LOCATION_X, messages.location_x)
         cvMessages.put(COL_LOCATION_Y, messages.location_y)
@@ -74,6 +76,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cvMessages.put(COL_CREATION_TIME, messages.creation_time)
         cvMessages.put(COL_CREATOR_ID, loggedAs)
         cvMessages.put(COL_REMINDER_SEEN, messages.reminder_seen)
+        cvMessages.put(COL_MESSAGE_IMAGE, messages.message_image)
 
         var resultMessages = dbMessages.insert(TABLE_NAME_MESSAGE, null, cvMessages)
         if(resultMessages == (-1).toLong()) {
@@ -117,9 +120,12 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
             do {
                 var messages = Messages()
                 // ADD COLUMNS HERE
+                messages.id_message = result.getInt(result.getColumnIndex(COL_ID_MESSAGE))
                 messages.message = result.getString(result.getColumnIndex(COL_MESSAGE))
                 messages.reminder_time = result.getString(result.getColumnIndex(COL_REMINDER_TIME))
                 messages.creator_id = result.getString(result.getColumnIndex(COL_CREATOR_ID))
+                messages.message_image = result.getInt(result.getColumnIndex(COL_MESSAGE_IMAGE))
+
                 list.add(messages)
             }while (result.moveToNext())
         }
@@ -127,30 +133,42 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         dbMessage.close()
         return list
     }
-    /*
-    fun updateDataMessages(){
-        val dbMessage = this.readableDatabase
-        val query = "Select * from $TABLE_NAME_MESSAGE"
-        val result = dbMessage.rawQuery(query, null)
-        if (result.moveToFirst()){
-            do {
-                var cv = ContentValues()
-                cv.put(COL_ID_MESSAGE, result.getInt(result.getColumnIndex(COL_ID_MESSAGE)))
-                dbMessage.update(TABLE_NAME_MESSAGE, cv, COL_ID_MESSAGE +  "=? AND " + COL_MESSAGE)
-            }while (result.moveToNext())
-        }
-        result.close()
-        dbMessage.close()
-    }
-     */
 
+    fun updateDataMessages(messages: Messages, loc: Int){
+        val db = this.writableDatabase
+        var cvMessages = Messages()
+        var cv = ContentValues()
+        cv.put(COL_MESSAGE, messages.message)
+        cv.put(COL_REMINDER_TIME, messages.reminder_time)
+        cv.put(COL_MESSAGE_IMAGE, messages.message_image)
+        db.update(TABLE_NAME_MESSAGE, cv,COL_ID_MESSAGE + "=" + loc, null)
+        db.close()
+    }
+
+    // LIST VIEW RELEVANT
     fun getDataMessages() : List<ListMessages>{
         var data = this.readDataMessages()
         val list = mutableListOf<ListMessages>()
 
         for (i in 0 until data.size){
             if (data[i].creator_id == loggedAs){
-                list.add(ListMessages(2, data[i].message,"3"))
+                if (data[i].message_image == 0) {
+                    list.add(ListMessages(R.drawable.ic_account_balance_24px, data[i].message, data[i].reminder_time))
+                }
+
+                else if (data[i].message_image == 1) {
+                    list.add(ListMessages(R.drawable.ic_add_shopping_cart_24px, data[i].message, data[i].reminder_time))
+                }
+
+                else if (data[i].message_image == 2) {
+                    list.add(ListMessages(R.drawable.ic_alarm_24px, data[i].message, data[i].reminder_time))
+                }
+                else if (data[i].message_image == 3) {
+                    list.add(ListMessages(R.drawable.ic_commute_24px, data[i].message, data[i].reminder_time))
+                }
+                else if (data[i].message_image == 4) {
+                    list.add(ListMessages(R.drawable.ic_settings_phone_24px, data[i].message, data[i].reminder_time))
+                }
             }
         }
 
@@ -158,9 +176,9 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun deleteDataMessages() {
+    fun deleteDataMessages(loc: Int) {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME_MESSAGE, COL_ID_MESSAGE + "=" + "1", null)
+        db.delete(TABLE_NAME_MESSAGE, COL_ID_MESSAGE + "=" + loc , null)
         db.close()
     }
 

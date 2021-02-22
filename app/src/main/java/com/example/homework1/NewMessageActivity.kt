@@ -16,7 +16,33 @@ class NewMessageActivity : AppCompatActivity() {
         val view=binding.root
         setContentView(view)
 
+        var messageImage = 0
         val context = this
+        binding.btnNewBank.setOnClickListener{
+            messageImage = 0
+            Toast.makeText(context, "Banking image picked!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnNewShoppingCart.setOnClickListener{
+            messageImage = 1
+            Toast.makeText(context, "Shopping image picked!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnNewClock.setOnClickListener{
+            messageImage = 2
+            Toast.makeText(context, "Alarm image picked!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnNewCommute.setOnClickListener{
+            messageImage = 3
+            Toast.makeText(context, "Commute image picked!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnNewPhone.setOnClickListener{
+            messageImage = 4
+            Toast.makeText(context, "Phone image picked!", Toast.LENGTH_SHORT).show()
+        }
+
 
         binding.btnAddMessage.setOnClickListener {
             if (binding.txtNewMessage.text.toString().isEmpty() || binding.txtMessageTime.text.toString().isEmpty()){
@@ -24,11 +50,8 @@ class NewMessageActivity : AppCompatActivity() {
             }
             else {
                 var dbMessages = DataBaseHandler(context)
-                var data = dbMessages.readDataMessages()
-
-
-                var messages = Messages(binding.txtNewMessage.text.toString(),"0" ,"0" , binding.txtMessageTime.text.toString(),"0", loggedAs,0)
-
+                var messages = Messages(binding.txtNewMessage.text.toString(),"0" ,"0" , binding.txtMessageDate.text.toString() + " - " + binding.txtMessageTime.text.toString()
+                        ,"0", loggedAs,0, messageImage) // IMAGE THINGIES************
 
                 dbMessages.insertMessage(messages)
                 startActivity(
