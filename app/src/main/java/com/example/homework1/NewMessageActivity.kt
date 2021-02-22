@@ -23,8 +23,13 @@ class NewMessageActivity : AppCompatActivity() {
                 Toast.makeText(context, "Please Fill All Data!", Toast.LENGTH_SHORT).show()
             }
             else {
-                var messages = Messages(binding.txtNewMessage.text.toString(),"0" ,"0" , binding.txtMessageTime.text.toString(),"0", loggedAs,0)
                 var dbMessages = DataBaseHandler(context)
+                var data = dbMessages.readDataMessages()
+
+
+                var messages = Messages(binding.txtNewMessage.text.toString(),"0" ,"0" , binding.txtMessageTime.text.toString(),"0", loggedAs,0)
+
+
                 dbMessages.insertMessage(messages)
                 startActivity(
                         Intent(applicationContext, MenuActivity::class.java)

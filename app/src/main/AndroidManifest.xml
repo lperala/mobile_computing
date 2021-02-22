@@ -9,11 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Homework1">
-        <activity android:name=".MenuHelpActivity"></activity>
+        <activity android:name=".MessageEditDeleteActivity"></activity>
+        <activity android:name=".NewMessageActivity" />
+        <activity android:name=".MenuHelpActivity" />
         <activity android:name=".LogHelpActivity" />
         <activity android:name=".MainHelpActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".Profile" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".SignActivity" />
         <activity android:name=".LogActivity" />

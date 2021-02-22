@@ -35,6 +35,7 @@ class LogActivity : AppCompatActivity() {
             for (i in 0 until data.size){
                 if (binding.txtUserName.text.toString() == data[i].userName && binding.txtPassword.text.toString() == data[i].passWord){
                     Toast.makeText(context, "Correct Username And Password!", Toast.LENGTH_SHORT).show()
+                    loggedAs = binding.txtUserName.text.toString()
                     startActivity(
                         Intent(applicationContext, MenuActivity::class.java)
                     )

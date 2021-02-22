@@ -12,8 +12,8 @@ class Messages {
     var creator_id : String = ""
     var reminder_seen : Int  = 0
 
-    // creator_id missing
     constructor(message : String, location_x : String, location_y : String, reminder_time : String, creation_time : String, creator_id : String, reminder_seen : Int){
+        //this.id_message = id_message
         this.message = message
         this.location_x = location_x
         this.location_y = location_y

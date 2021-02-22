@@ -34,6 +34,7 @@ class MenuActivity : AppCompatActivity() {
         Toast.makeText(this@MenuActivity, "$messages", Toast.LENGTH_SHORT).show()
         binding.listView.adapter = arrayAdapter
 
+        binding.txtLogged.text = loggedAs
         // Shows the user's profile
         binding.btnProfile.setOnClickListener {
             Log.d("Lab", "ProfileActivity Button CLicked")
@@ -65,7 +66,11 @@ class MenuActivity : AppCompatActivity() {
 
         binding.listView.setOnItemClickListener(object: AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                Toast.makeText(context, "LIST VIEW CLICKED AT: " + position, Toast.LENGTH_SHORT).show()
+                globalPos = position
+                Toast.makeText(context, "GLOBALPOS: " + globalPos, Toast.LENGTH_SHORT).show()
+                startActivity(
+                        Intent(applicationContext, MessageEditDeleteActivity::class.java)
+                )
             }
         })
     }
