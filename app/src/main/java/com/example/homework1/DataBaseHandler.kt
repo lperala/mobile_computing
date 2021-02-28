@@ -151,7 +151,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val list = mutableListOf<ListMessages>()
 
         for (i in 0 until data.size){
-            if (data[i].creator_id == loggedAs){
+            if (data[i].creator_id == loggedAs && data[i].reminder_seen == 1){
                 if (data[i].message_image == 0) {
                     list.add(ListMessages(R.drawable.ic_account_balance_24px, data[i].message, data[i].reminder_time))
                 }
@@ -180,6 +180,13 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.writableDatabase
         db.delete(TABLE_NAME_MESSAGE, COL_ID_MESSAGE + "=" + loc , null)
         db.close()
+    }
+
+    fun messageSeen(msgId: Int, value: Int){
+        val db = this.writableDatabase
+        var cv = ContentValues()
+        cv.put(COL_REMINDER_SEEN, value)
+        db.update(TABLE_NAME_MESSAGE, cv,COL_ID_MESSAGE + "=" + msgId, null)
     }
 
 }

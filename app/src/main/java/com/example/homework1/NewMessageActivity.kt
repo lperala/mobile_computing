@@ -1,6 +1,8 @@
 package com.example.homework1
 
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -10,9 +12,11 @@ import android.os.Message
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.homework1.databinding.ActivityNewMessageBinding
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -20,6 +24,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class NewMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewMessageBinding
@@ -114,32 +119,73 @@ class NewMessageActivity : AppCompatActivity() {
                         messageId = data[i].id_message
                     }
                 }
+                println("MESSAGE ID: " + messageId)
                 setReminderWithWorkManager(applicationContext, messageId, reminderCalendar.timeInMillis, binding.txtNewMessage.text.toString())
             }
         }
     }
-    fun setReminderWithWorkManager(
-            context: Context,
-            uid: Int,
-            timeInMillis: Long,
-            message: String
-    ){
-        val reminderParameters = Data.Builder()
-                .putString("message", message)
-                .putInt("uid", uid)
-                .build()
 
-        var minutesFromNow = 0L
-        if (timeInMillis > System.currentTimeMillis())
-            minutesFromNow = timeInMillis - (System.currentTimeMillis())
+    public fun reminderSeen(){
+
+    }
+
+
+    companion object {
+        fun setReminderWithWorkManager(
+                context: Context,
+                uid: Int,
+                timeInMillis: Long,
+                message: String
+        ) {
+            val data: Data = workDataOf(
+                    "message" to message,
+                    "msgId" to uid
+            )
+
+            var minutesFromNow = 0L
+            if (timeInMillis > System.currentTimeMillis())
+                minutesFromNow = timeInMillis - (System.currentTimeMillis())
             println("Miillies from now: " + minutesFromNow)
             println("Minutes from now: " + minutesFromNow * 0.00001667)
 
-        val reminderRequest = OneTimeWorkRequestBuilder<Worker>()
-                .setInputData(reminderParameters)
-                .setInitialDelay(minutesFromNow, TimeUnit.MILLISECONDS)
-                .build()
+            val reminderRequest = OneTimeWorkRequestBuilder<Worker>()
+                    .setInputData(data)
+                    // minutes from now first
+                    .setInitialDelay(0, TimeUnit.MILLISECONDS)
+                    .build()
 
-        WorkManager.getInstance(context).enqueue(reminderRequest)
+            WorkManager.getInstance(context).enqueue(reminderRequest)
+        }
+
+        fun showNofitication(context: Context, message: String, msgId: Int) {
+            val CHANNEL_ID = "BANKING_APP_NOTIFICATION_CHANNEL"
+            var notificationId = Random.nextInt(10, 1000) + 5
+            // notificationId += Random(notificationId).nextInt(1, 500)
+            println("SHOW NOTIFICATION MSG ID : " + msgId)
+            var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(context.getString(R.string.app_name))
+                    .setContentText(message)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setGroup(CHANNEL_ID)
+
+            val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            // Notification chancel needed since Android 8
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                        CHANNEL_ID,
+                        context.getString(R.string.app_name),
+                        NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = context.getString(R.string.app_name)
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+            notificationManager.notify(notificationId, notificationBuilder.build())
+        }
     }
-    }
+}
+
