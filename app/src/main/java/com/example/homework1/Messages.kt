@@ -1,6 +1,7 @@
 package com.example.homework1
 
 import java.sql.Date
+import java.util.*
 
 class Messages {
     var id_message : Int = 0
