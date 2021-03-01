@@ -24,7 +24,7 @@ class SignActivity : AppCompatActivity() {
             else if (binding.txtUserName.text.toString().isNotEmpty() && binding.txtPassword.text.toString().isNotEmpty()
                     && binding.txtPasswordConfirm.text.toString().isNotEmpty()
                     && binding.txtPassword.text.toString() == binding.txtPasswordConfirm.text.toString()) {
-                var user = User(binding.txtUserName.text.toString(), binding.txtPassword.text.toString())
+                var user = User(binding.txtUserName.text.toString(), binding.txtPassword.text.toString(), 0.0, 0.0)
                 var db = DataBaseHandler(context)
                 println("TÄÄLLÄ")
                 db.insertData(user)

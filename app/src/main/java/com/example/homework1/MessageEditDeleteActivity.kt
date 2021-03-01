@@ -80,8 +80,8 @@ class MessageEditDeleteActivity : AppCompatActivity() {
             else {
                 var messages = Messages(
                     binding.txtEditDeleteMessage.text.toString(),
-                    "0",
-                    "0",
+                    0.0,
+                    0.0,
                     binding.txtEditDeleteDate.text.toString() + " - " + binding.txtEditDeleteTime.text.toString(),
                     "0",
                     loggedAs,

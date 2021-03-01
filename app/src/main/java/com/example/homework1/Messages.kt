@@ -6,8 +6,8 @@ import java.util.*
 class Messages {
     var id_message : Int = 0
     var message : String = ""
-    var location_x : String = ""
-    var location_y : String = ""
+    var location_x : Double = 0.0
+    var location_y : Double = 0.0
     var reminder_time : String = ""
     var creation_time : String = ""
     var creator_id : String = ""
@@ -15,7 +15,7 @@ class Messages {
     var message_image : Int = 0
 
     // id_message : Int,
-    constructor( message : String, location_x : String, location_y : String, reminder_time : String, creation_time : String, creator_id : String, reminder_seen : Int, message_image : Int){
+    constructor( message : String, location_x : Double, location_y : Double, reminder_time : String, creation_time : String, creator_id : String, reminder_seen : Int, message_image : Int){
         //this.id_message = id_message
         this.message = message
         this.location_x = location_x

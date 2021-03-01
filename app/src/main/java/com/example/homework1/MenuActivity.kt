@@ -71,6 +71,12 @@ class MenuActivity : AppCompatActivity() {
             )
         }
 
+        binding.btnLocation.setOnClickListener{
+            startActivity(
+                    Intent(applicationContext, MapActivity::class.java)
+            )
+        }
+
         binding.listView.setOnItemClickListener(object: AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 globalPos = position
