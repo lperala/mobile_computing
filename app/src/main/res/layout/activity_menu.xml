@@ -84,6 +84,20 @@
         app:layout_constraintVertical_bias="0.023" />
 
     <Button
+        android:id="@+id/btnRefresh"
+        android:layout_width="55dp"
+        android:layout_height="49dp"
+        android:background="#9017BC"
+        android:text="F5"
+        app:backgroundTint="#9017BC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.266" />
+
+    <Button
         android:id="@+id/btnNewMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

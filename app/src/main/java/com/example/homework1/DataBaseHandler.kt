@@ -125,7 +125,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 messages.reminder_time = result.getString(result.getColumnIndex(COL_REMINDER_TIME))
                 messages.creator_id = result.getString(result.getColumnIndex(COL_CREATOR_ID))
                 messages.message_image = result.getInt(result.getColumnIndex(COL_MESSAGE_IMAGE))
-
+                messages.reminder_seen = result.getInt(result.getColumnIndex(COL_REMINDER_SEEN))
                 list.add(messages)
             }while (result.moveToNext())
         }
