@@ -17,6 +17,10 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+
+public var latitudeNew = 0.0
+public var longitudeNew = 0.0
+
 class NewMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewMessageBinding
     @RequiresApi(Build.VERSION_CODES.O)
@@ -27,7 +31,7 @@ class NewMessageActivity : AppCompatActivity() {
         setContentView(view)
         var messageImage = 0
         val context = this
-        val list = listOf<Int>()
+
         binding.btnNewBank.setOnClickListener {
             messageImage = 0
             Toast.makeText(context, "Banking image picked!", Toast.LENGTH_SHORT).show()
@@ -57,6 +61,12 @@ class NewMessageActivity : AppCompatActivity() {
             var reminderCalendar = GregorianCalendar.getInstance()
         }
 
+        binding.btnLocationNew.setOnClickListener{
+            startActivityForResult(
+                    Intent(applicationContext, MapActivityNew::class.java), 1
+            )
+        }
+
 
         binding.btnAddMessage.setOnClickListener {
             if (binding.txtNewMessage.text.toString().isEmpty() || binding.txtMessageTime.text.toString().isEmpty()) {
@@ -80,7 +90,7 @@ class NewMessageActivity : AppCompatActivity() {
 
                 var dbMessages = DataBaseHandler(context)
                 var reminderDate = binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString()
-                var messages = Messages(binding.txtNewMessage.text.toString(), "0", "0", reminderDate, formattedCurrent, loggedAs, 0, messageImage) // IMAGE THINGIES************
+                var messages = Messages(binding.txtNewMessage.text.toString(), latitudeNew , longitudeNew , reminderDate, formattedCurrent, loggedAs, 0, messageImage) // IMAGE THINGIES************
 
 
                 /*
@@ -159,6 +169,10 @@ class NewMessageActivity : AppCompatActivity() {
                 setReminderWithWorkManager(applicationContext, messageId, reminderCalendar.timeInMillis, binding.txtNewMessage.text.toString(), checked, reminderCalendar.time.toString())
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
 
