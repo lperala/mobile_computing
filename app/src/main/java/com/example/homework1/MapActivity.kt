@@ -1,10 +1,17 @@
 package com.example.homework1
 
+import android.content.ContentValues
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.os.PersistableBundle
 import android.view.LayoutInflater
+import android.widget.Toast
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.homework1.databinding.ActivityMainBinding
 import com.example.homework1.databinding.ActivityMapBinding
 import com.example.homework1.databinding.ActivityMenuBinding
@@ -17,7 +24,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
+import java.util.concurrent.TimeUnit
 
+public var latitudeUser = 0.0
+public var longitudeUser = 0.0
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback{
 
@@ -51,6 +61,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback{
 
             println("LAT: " + latitude + " LNG: " + longitude)
             map.addMarker(MarkerOptions().position(LatLng(latitude,longitude)))
+            var user = User()
+            latitudeUser = latitude
+            longitudeUser = longitude
             /*
             map.addMarker(
                 MarkerOptions()

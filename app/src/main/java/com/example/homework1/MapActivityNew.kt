@@ -1,5 +1,6 @@
 package com.example.homework1
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
@@ -18,12 +19,14 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
 
+public var latitudeNew = 0.0
+public var longitudeNew = 0.0
 
 class MapActivityNew : AppCompatActivity(), OnMapReadyCallback{
 
     private lateinit var map: GoogleMap
     private val TAG = MapActivityNew::class.java.simpleName
-    private val REQUEST_LOCATION_PERMISSION = 1
+    //private val REQUEST_LOCATION_PERMISSION = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -47,15 +50,24 @@ class MapActivityNew : AppCompatActivity(), OnMapReadyCallback{
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener {
 
-            val latitude = it.latitude
-            val longitude = it.longitude
+            latitudeNew = it.latitude
+            longitudeNew = it.longitude
 
-
-
-            println("LAT: " + latitude + " LNG: " + longitude)
-            map.addMarker(MarkerOptions().position(LatLng(latitude,longitude)))
+            println("LAT: " + latitudeNew + " LNG: " + longitudeNew)
+            map.addMarker(MarkerOptions().position(LatLng(latitudeNew,longitudeNew)))
+            //sendDataBackToPreviousActivity()
 
         }
     }
+    /*
+    private fun sendDataBackToPreviousActivity(){
+        val intent = intent().apply{
+            latitudeNew
+            longitudeNew
+        }
+        setResult(Activity.RESULT_OK)
+    }
+
+     */
 }
 

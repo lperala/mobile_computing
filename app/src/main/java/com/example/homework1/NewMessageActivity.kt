@@ -1,5 +1,6 @@
 package com.example.homework1
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -18,8 +19,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-public var latitudeNew = 0.0
-public var longitudeNew = 0.0
+
 
 class NewMessageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewMessageBinding
@@ -62,6 +62,7 @@ class NewMessageActivity : AppCompatActivity() {
         }
 
         binding.btnLocationNew.setOnClickListener{
+            //startActivityForResult(intent, START_ACTIVITY_MAP_ACTIVITY_NEW)
             startActivityForResult(
                     Intent(applicationContext, MapActivityNew::class.java), 1
             )
@@ -69,27 +70,35 @@ class NewMessageActivity : AppCompatActivity() {
 
 
         binding.btnAddMessage.setOnClickListener {
-            if (binding.txtNewMessage.text.toString().isEmpty() || binding.txtMessageTime.text.toString().isEmpty()) {
+            if (binding.txtNewMessage.text.toString().isEmpty() || binding.txtMessageDate.text.toString().isEmpty()) {
                 Toast.makeText(context, "Please Fill All Data!", Toast.LENGTH_SHORT).show()
             } else {
+                var dateString = binding.txtMessageDate.text.toString()
+                var timeString = binding.txtMessageTime.text.toString()
+
+
 
                 val reminderCalendar = GregorianCalendar.getInstance()
                 val dateFormat = "dd.MM.yyyy HH:mm"
                 val current = LocalDateTime.now()
-
                 val formatter = DateTimeFormatter.ofPattern(dateFormat)
                 val formattedCurrent = current.format(formatter)
 
-                val date = LocalDateTime.parse(binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString(), formatter)
+                val date = LocalDateTime.parse(dateString + " " + timeString, formatter)
 
-                reminderCalendar.set(Calendar.YEAR, date.year)
-                reminderCalendar.set(Calendar.MONTH, date.monthValue - 1)
-                reminderCalendar.set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
-                reminderCalendar.set(Calendar.HOUR_OF_DAY, date.hour)
-                reminderCalendar.set(Calendar.MINUTE, date.minute)
 
-                var dbMessages = DataBaseHandler(context)
-                var reminderDate = binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString()
+                    reminderCalendar.set(Calendar.YEAR, date.year)
+                    reminderCalendar.set(Calendar.MONTH, date.monthValue - 1)
+                    reminderCalendar.set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
+                    reminderCalendar.set(Calendar.HOUR_OF_DAY, date.hour)
+                    reminderCalendar.set(Calendar.MINUTE, date.minute)
+
+                    var dbMessages = DataBaseHandler(context)
+                    var reminderDate = binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString()
+
+
+
+
                 var messages = Messages(binding.txtNewMessage.text.toString(), latitudeNew , longitudeNew , reminderDate, formattedCurrent, loggedAs, 0, messageImage) // IMAGE THINGIES************
 
 
@@ -125,27 +134,37 @@ class NewMessageActivity : AppCompatActivity() {
                         timeInMillis: Long,
                         message: String,
                         checked: Int,
-                        date : String
+                        date : String,
+                        location_x : Double,
+                        location_y : Double
 
                 ) {
                     val data: Data = workDataOf(
                             "message" to message,
                             "msgId" to uid,
                             "checked" to checked,
-                            "date" to date
+                            "date" to date,
+                            "location_x" to location_x,
+                            "location_y" to location_y
                     )
 
                     var minutesFromNow = 0L
-                    println("TIME IN MILLIS FIRST: " + timeInMillis)
-                    println("SYS FIRST: " + System.currentTimeMillis())
+                    //println("TIME IN MILLIS FIRST: " + timeInMillis)
+                    //println("SYS FIRST: " + System.currentTimeMillis())
                     if (timeInMillis.toLong() > System.currentTimeMillis()) {
                         minutesFromNow = timeInMillis.toLong() - System.currentTimeMillis()
                     }
+                    /*
                     println("Miillies from now: " + minutesFromNow)
                     println("MINUTES FROM NOW " + minutesFromNow * 0.00001667)
 
                     println("TIME IN MILLIS: " + timeInMillis.toLong())
                     println("SYS CURRENT TIME MILLIS: " + System.currentTimeMillis())
+                     */
+
+                    println("USER SETIT: Y/lat: " + latitudeUser + " X/lng: " + longitudeUser)
+                    println("NEW SETIT: Y/lat: " + latitudeNew + " X/lng: " + longitudeNew)
+
 
                     val reminderRequest = OneTimeWorkRequestBuilder<Worker>()
                             .setInputData(data)
@@ -165,14 +184,23 @@ class NewMessageActivity : AppCompatActivity() {
                     checked = 0
                 }
 
-
-                setReminderWithWorkManager(applicationContext, messageId, reminderCalendar.timeInMillis, binding.txtNewMessage.text.toString(), checked, reminderCalendar.time.toString())
+                setReminderWithWorkManager(applicationContext, messageId, reminderCalendar.timeInMillis, binding.txtNewMessage.text.toString(), checked, reminderCalendar.time.toString(), latitudeNew, longitudeNew)
             }
         }
     }
 
+    companion object{
+        const val START_ACTIVITY_MAP_ACTIVITY_NEW = 0
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == START_ACTIVITY_MAP_ACTIVITY_NEW){
+            if (resultCode == Activity.RESULT_OK){
+                val message = data!!.getStringExtra("message")
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }
 

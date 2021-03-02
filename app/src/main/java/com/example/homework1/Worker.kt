@@ -20,17 +20,30 @@ class Worker(appContext: Context, workerParameters: WorkerParameters) : Worker(a
     override fun doWork(): Result {
         // val userId = inputData.getInt("userId,
         val message = inputData.getString("message")
-        val msgId = inputData.getInt("msgId",0)
+        val msgId = inputData.getInt("msgId", 0)
         val checked = inputData.getInt("checked", 0)
         val date = inputData.getString("date")
+        val location_x = inputData.getDouble("location_x", 0.0)
+        val location_y = inputData.getDouble("location_y", 0.0)
+
         println("Message WORKER: " + message)
         println("CHECKED: " + checked)
+        println("laatitude user: " + latitudeUser)
+        println("location_x: " + location_x)
         if (checked == 1) {
-            showNofitication(applicationContext, message!!, msgId!!, checked!!, date!!)
+            var counter = 1
+            while (counter == 1) {
+                if (latitudeUser < location_x) {
+                    showNofitication(applicationContext, message!!, msgId!!, checked!!, date!!)
+                    println("NOTIFICATION SENT")
+                    reminderSeen(applicationContext, msgId)     //shows up in listview
+                    counter = 0
+                }
+            }
         }
-        reminderSeen(applicationContext, msgId)
         return Result.success()
     }
+
 
 
     fun showNofitication(context: Context, message: String, msgId: Int, checked: Int, date: String) {
@@ -63,7 +76,6 @@ class Worker(appContext: Context, workerParameters: WorkerParameters) : Worker(a
                 notificationManager.createNotificationChannel(channel)
             }
             notificationManager.notify(notificationId, notificationBuilder.build())
-            //playTune()
             playCustomTune()
     }
 

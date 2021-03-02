@@ -86,6 +86,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
             //user.id += 1
         }
+        db.close()
     }
 
     // Read data from the database, currently used for testing purposes
@@ -122,6 +123,8 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 // ADD COLUMNS HERE
                 messages.id_message = result.getInt(result.getColumnIndex(COL_ID_MESSAGE))
                 messages.message = result.getString(result.getColumnIndex(COL_MESSAGE))
+                messages.location_x = result.getDouble(result.getColumnIndex(COL_LOCATION_X))
+                messages.location_y = result.getDouble(result.getColumnIndex(COL_LOCATION_Y))
                 messages.reminder_time = result.getString(result.getColumnIndex(COL_REMINDER_TIME))
                 messages.creator_id = result.getString(result.getColumnIndex(COL_CREATOR_ID))
                 messages.message_image = result.getInt(result.getColumnIndex(COL_MESSAGE_IMAGE))
@@ -179,7 +182,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
     fun deleteDataMessages(loc: Int) {
         val db = this.writableDatabase
         db.delete(TABLE_NAME_MESSAGE, COL_ID_MESSAGE + "=" + loc , null)
-        db.close()
+        //db.close()
     }
 
     fun messageSeen(msgId: Int, value: Int){
@@ -187,6 +190,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
         var cv = ContentValues()
         cv.put(COL_REMINDER_SEEN, value)
         db.update(TABLE_NAME_MESSAGE, cv,COL_ID_MESSAGE + "=" + msgId, null)
+        db.close()
     }
 
 }
