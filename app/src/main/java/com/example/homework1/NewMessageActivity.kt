@@ -75,28 +75,23 @@ class NewMessageActivity : AppCompatActivity() {
             } else {
                 var dateString = binding.txtMessageDate.text.toString()
                 var timeString = binding.txtMessageTime.text.toString()
-
-
-
-                val reminderCalendar = GregorianCalendar.getInstance()
+                var reminderDate = ""
                 val dateFormat = "dd.MM.yyyy HH:mm"
-                val current = LocalDateTime.now()
                 val formatter = DateTimeFormatter.ofPattern(dateFormat)
-                val formattedCurrent = current.format(formatter)
-
+                val reminderCalendar = GregorianCalendar.getInstance()
                 val date = LocalDateTime.parse(dateString + " " + timeString, formatter)
 
+                reminderCalendar.set(Calendar.YEAR, date.year)
+                reminderCalendar.set(Calendar.MONTH, date.monthValue - 1)
+                reminderCalendar.set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
+                reminderCalendar.set(Calendar.HOUR_OF_DAY, date.hour)
+                reminderCalendar.set(Calendar.MINUTE, date.minute)
+                reminderDate = binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString()
 
-                    reminderCalendar.set(Calendar.YEAR, date.year)
-                    reminderCalendar.set(Calendar.MONTH, date.monthValue - 1)
-                    reminderCalendar.set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
-                    reminderCalendar.set(Calendar.HOUR_OF_DAY, date.hour)
-                    reminderCalendar.set(Calendar.MINUTE, date.minute)
+                val current = LocalDateTime.now()
+                val formattedCurrent = current.format(formatter)
 
-                    var dbMessages = DataBaseHandler(context)
-                    var reminderDate = binding.txtMessageDate.text.toString() + " " + binding.txtMessageTime.text.toString()
-
-
+                var dbMessages = DataBaseHandler(context)
 
 
                 var messages = Messages(binding.txtNewMessage.text.toString(), latitudeNew , longitudeNew , reminderDate, formattedCurrent, loggedAs, 0, messageImage) // IMAGE THINGIES************
