@@ -21,24 +21,37 @@ class Worker(appContext: Context, workerParameters: WorkerParameters) : Worker(a
         // val userId = inputData.getInt("userId,
         val message = inputData.getString("message")
         val msgId = inputData.getInt("msgId", 0)
-        val checked = inputData.getInt("checked", 0)
+        val notificationChecked = inputData.getInt("checked", 0)
+        val locationChecked = inputData.getInt("checked", 0)
         val date = inputData.getString("date")
+        val area = 0.0025
         val location_x = inputData.getDouble("location_x", 0.0)
         val location_y = inputData.getDouble("location_y", 0.0)
-
+        /*
+        println("Date wrker: " + date)
         println("Message WORKER: " + message)
-        println("CHECKED: " + checked)
+        println("CHECKED: " + notificationChecked)
         println("laatitude user: " + latitudeUser)
         println("location_x: " + location_x)
-        if (checked == 1) {
-            var counter = 1
-            while (counter == 1) {
-                if (latitudeUser < location_x) {
-                    showNofitication(applicationContext, message!!, msgId!!, checked!!, date!!)
-                    println("NOTIFICATION SENT")
-                    reminderSeen(applicationContext, msgId)     //shows up in listview
-                    counter = 0
+        */
+        println("MAX LAT: " + (location_x + area) + " MIN LAT: " + (location_x - area) + " - " + "MAX LNG: " + (location_y + area) + " MIN LNG: " +  (location_y - area))
+        if (notificationChecked == 1) {
+            if (location_x != 0.0 && location_y != 0.0){
+                var counter = 1
+                while (counter == 1) {
+                    if (latitudeUser < location_x + area && latitudeUser > location_x - area && longitudeUser < location_y + area && longitudeUser > location_y - area) {
+                        showNofitication(applicationContext, message!!, msgId!!, notificationChecked!!, date!!)
+                        println("NOTIFICATION SENT")
+                        reminderSeen(applicationContext, msgId)     //shows up in listview
+                        counter = 0
+                        playCustomTune()
+                    }
                 }
+            }else{
+                playCustomTune()
+                showNofitication(applicationContext, message!!, msgId!!, notificationChecked!!, date!!)
+                reminderSeen(applicationContext, msgId)     //shows up in listview
+                playCustomTune()
             }
         }
         return Result.success()
@@ -76,7 +89,6 @@ class Worker(appContext: Context, workerParameters: WorkerParameters) : Worker(a
                 notificationManager.createNotificationChannel(channel)
             }
             notificationManager.notify(notificationId, notificationBuilder.build())
-            playCustomTune()
     }
 
     fun reminderSeen(context: Context, msgId: Int){

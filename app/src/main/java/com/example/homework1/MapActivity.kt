@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -55,7 +56,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback{
 
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener {
-
+            map.clear()
             val latitude = it.latitude
             val longitude = it.longitude
 

@@ -49,6 +49,7 @@ class MapActivityNew : AppCompatActivity(), OnMapReadyCallback{
 
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener {
+            map.clear()
 
             latitudeNew = it.latitude
             longitudeNew = it.longitude

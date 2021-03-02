@@ -86,7 +86,7 @@ class DataBaseHandler(var context: Context) : SQLiteOpenHelper(context, DATABASE
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
             //user.id += 1
         }
-        db.close()
+        //db.close()
     }
 
     // Read data from the database, currently used for testing purposes
